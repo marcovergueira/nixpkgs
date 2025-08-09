@@ -45,6 +45,9 @@ rec {
       substituteInPlace $out/opt/brother/Printers/${model}/lpd/filter${model} \
       --replace /opt "$out/opt"
 
+      substituteInPlace $out/opt/brother/Printers/${model}/inf/br${model}rc \
+      --replace "PaperType=Letter" "PaperType=A4"
+
       patchelf --set-interpreter $(cat $NIX_CC/nix-support/dynamic-linker) \
       $out/opt/brother/Printers/${model}/lpd/br${model}filter
 
