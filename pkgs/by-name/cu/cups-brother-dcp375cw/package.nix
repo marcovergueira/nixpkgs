@@ -14,7 +14,6 @@
   which,
   gawk,
 }:
-
 let
   version = "1.1.3-1";
   model = "dcp375cw";
@@ -37,7 +36,7 @@ stdenv.mkDerivation {
   ];
 
   nativeBuildInputs = [
-    #dpkg
+    dpkg
     makeWrapper
   ];
 
