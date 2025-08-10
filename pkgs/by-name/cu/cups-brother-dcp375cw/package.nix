@@ -36,7 +36,7 @@ stdenv.mkDerivation {
   ];
 
   nativeBuildInputs = [
-    dpkg
+    #dpkg
     makeWrapper
   ];
 
@@ -45,6 +45,7 @@ stdenv.mkDerivation {
     ghostscript
     a2ps
     gawk
+    dpkg
   ];
 
   unpackPhase = ''
