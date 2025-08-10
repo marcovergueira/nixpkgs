@@ -17,11 +17,11 @@
 let
   version = "1.1.3-1";
   model = "dcp375cw";
-  cups = fetchurl {
+  cupsdeb = fetchurl {
     url = "https://download.brother.com/welcome/dlf005429/dcp375cwcupswrapper-${version}.i386.deb";
     hash = "sha256-ZgE2o/xU11+MzSnBYakXZE5m+Qa85/KIo31wKWAmsGY=";
   };
-  lpr = fetchurl {
+  lprdeb = fetchurl {
     url = "https://download.brother.com/welcome/dlf005427/dcp375cwlpr-${version}.i386.deb";
     hash = "sha256-ZgE2o/xU11+MzSnBYakXZE5m+Qa85/KIo31wKWAmsGY=";
   };
@@ -31,8 +31,8 @@ stdenv.mkDerivation {
   inherit version;
 
   srcs = [
-    cups
-    lpr
+    cupsdeb
+    lprdeb
   ];
 
   nativeBuildInputs = [
