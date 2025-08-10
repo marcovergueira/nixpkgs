@@ -57,14 +57,16 @@ stdenv.mkDerivation {
   '';
 
   installPhase = ''
+    runHook preInstall
+
     substituteInPlace $out/opt/brother/Printers/${model}/lpd/filter${model} \
-    --replace /opt "$out/opt"
+      --replace /opt "$out/opt"
 
     substituteInPlace $out/opt/brother/Printers/${model}/inf/br${model}rc \
-    --replace "PaperType=Letter" "PaperType=A4"
+      --replace "PaperType=Letter" "PaperType=A4"
 
     patchelf --set-interpreter $(cat $NIX_CC/nix-support/dynamic-linker) \
-    $out/opt/brother/Printers/${model}/lpd/br${model}filter
+      $out/opt/brother/Printers/${model}/lpd/br${model}filter
 
     mkdir -p $out/lib/cups/filter/
     ln -s $out/opt/brother/Printers/${model}/lpd/filter${model} $out/lib/cups/filter/brlpdwrapper${model}
@@ -96,6 +98,8 @@ stdenv.mkDerivation {
 
     mkdir -p $out/share/cups/model
     ln -s $out/opt/brother/Printers/${model}/cupswrapper/brother_${model}_printer_en.ppd $out/share/cups/model/
+    
+    runHook postInstall
   '';
 
   meta = with lib; {
