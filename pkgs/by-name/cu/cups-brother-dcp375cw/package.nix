@@ -30,7 +30,7 @@ stdenv.mkDerivation {
   pname = "cups-brother-${model}";
   inherit version;
 
-  srcs = [
+  src = [
     cupsdeb
     lprdeb
   ];
