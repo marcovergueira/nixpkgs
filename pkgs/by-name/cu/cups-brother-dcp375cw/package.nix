@@ -48,17 +48,11 @@ stdenv.mkDerivation {
   ];
 
   unpackPhase = ''
-    runHook preUnpack
-
     dpkg-deb -x ${lprdeb} $out
     dpkg-deb -x ${cupsdeb} $out
-
-    runHook postUnpack
   '';
 
   installPhase = ''
-    runHook preInstall
-
     substituteInPlace $out/opt/brother/Printers/${model}/lpd/filter${model} \
       --replace /opt "$out/opt"
   '';
