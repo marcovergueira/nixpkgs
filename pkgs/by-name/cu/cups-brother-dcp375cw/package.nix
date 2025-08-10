@@ -50,8 +50,8 @@ stdenv.mkDerivation {
   unpackPhase = ''
     runHook preUnpack
 
-    dpkg-deb -x ${lpr} $out
-    dpkg-deb -x ${cups} $out
+    dpkg-deb -x ${lprdeb} $out
+    dpkg-deb -x ${cupsdeb} $out
 
     runHook postUnpack
   '';
