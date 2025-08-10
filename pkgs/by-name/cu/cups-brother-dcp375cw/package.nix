@@ -83,38 +83,7 @@ stdenv.mkDerivation {
             which
           ]
         }
-    '';
 
-    meta = with lib; {
-      homepage = "https://www.brother.com/";
-      description = "Brother ${model} printer driver";
-      sourceProvenance = with sourceTypes; [ binaryNativeCode ];
-      license = licenses.unfree;
-      platforms = platforms.linux;
-      downloadPage = "https://support.brother.com/g/b/downloadlist.aspx?c=gb&lang=en&prod=${model}_all&os=128";
-      maintainers = with maintainers; [ marcovergueira ];
-    };
-  };
-
-  cupswrapper = stdenv.mkDerivation {
-    pname = "${model}-cupswrapper";
-    inherit version;
-
-    
-
-    nativeBuildInputs = [
-      dpkg
-      makeWrapper
-    ];
-    buildInputs = [
-      cups
-      ghostscript
-      a2ps
-      gawk
-    ];
-    unpackPhase = "dpkg-deb -x $src $out";
-
-    installPhase = ''
       for f in $out/opt/brother/Printers/${model}/cupswrapper/cupswrapper${model}; do
         wrapProgram $f --prefix PATH : ${
           lib.makeBinPath [
@@ -131,8 +100,8 @@ stdenv.mkDerivation {
     '';
 
     meta = with lib; {
-      homepage = "http://www.brother.com/";
-      description = "Brother ${model} printer CUPS wrapper driver";
+      homepage = "https://www.brother.com/";
+      description = "Brother ${model} printer driver";
       sourceProvenance = with sourceTypes; [ binaryNativeCode ];
       license = licenses.unfree;
       platforms = platforms.linux;
