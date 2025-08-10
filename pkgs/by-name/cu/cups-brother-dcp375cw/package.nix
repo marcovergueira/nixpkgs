@@ -50,8 +50,8 @@ stdenv.mkDerivation {
   unpackPhase = ''
     runHook preUnpack
 
-    dpkg-deb -x $lprdeb $out
-    dpkg-deb -x $cupsdeb $out
+    dpkg-deb -x ${lprdeb} $out
+    dpkg-deb -x ${cupsdeb} $out
 
     runHook postUnpack
   '';
@@ -61,46 +61,45 @@ stdenv.mkDerivation {
 
     substituteInPlace $out/opt/brother/Printers/${model}/lpd/filter${model} \
       --replace /opt "$out/opt"
-
-    substituteInPlace $out/opt/brother/Printers/${model}/inf/br${model}rc \
-      --replace "PaperType=Letter" "PaperType=A4"
-
-    patchelf --set-interpreter $(cat $NIX_CC/nix-support/dynamic-linker) \
-      $out/opt/brother/Printers/${model}/lpd/br${model}filter
-
-    mkdir -p $out/lib/cups/filter/
-    ln -s $out/opt/brother/Printers/${model}/lpd/filter${model} $out/lib/cups/filter/brlpdwrapper${model}
-
-    wrapProgram $out/opt/brother/Printers/${model}/lpd/filter${model} \
-      --prefix PATH ":" ${
-        lib.makeBinPath [
-          gawk
-          ghostscript
-          a2ps
-          file
-          gnused
-          gnugrep
-          coreutils
-          which
-        ]
-      }
-
-    for f in $out/opt/brother/Printers/${model}/cupswrapper/cupswrapper${model}; do
-      wrapProgram $f --prefix PATH : ${
-        lib.makeBinPath [
-          coreutils
-          ghostscript
-          gnugrep
-          gnused
-        ]
-      }
-    done
-
-    mkdir -p $out/share/cups/model
-    ln -s $out/opt/brother/Printers/${model}/cupswrapper/brother_${model}_printer_en.ppd $out/share/cups/model/
-    
-    runHook postInstall
   '';
+    # substituteInPlace $out/opt/brother/Printers/${model}/inf/br${model}rc \
+    #   --replace "PaperType=Letter" "PaperType=A4"
+
+    # patchelf --set-interpreter $(cat $NIX_CC/nix-support/dynamic-linker) \
+    #   $out/opt/brother/Printers/${model}/lpd/br${model}filter
+
+    # mkdir -p $out/lib/cups/filter/
+    # ln -s $out/opt/brother/Printers/${model}/lpd/filter${model} $out/lib/cups/filter/brlpdwrapper${model}
+
+    # wrapProgram $out/opt/brother/Printers/${model}/lpd/filter${model} \
+    #   --prefix PATH ":" ${
+    #     lib.makeBinPath [
+    #       gawk
+    #       ghostscript
+    #       a2ps
+    #       file
+    #       gnused
+    #       gnugrep
+    #       coreutils
+    #       which
+    #     ]
+    #   }
+
+    # for f in $out/opt/brother/Printers/${model}/cupswrapper/cupswrapper${model}; do
+    #   wrapProgram $f --prefix PATH : ${
+    #     lib.makeBinPath [
+    #       coreutils
+    #       ghostscript
+    #       gnugrep
+    #       gnused
+    #     ]
+    #   }
+    # done
+
+    # mkdir -p $out/share/cups/model
+    # ln -s $out/opt/brother/Printers/${model}/cupswrapper/brother_${model}_printer_en.ppd $out/share/cups/model/
+    
+    # runHook postInstall
 
   meta = with lib; {
     homepage = "https://www.brother.com/";
