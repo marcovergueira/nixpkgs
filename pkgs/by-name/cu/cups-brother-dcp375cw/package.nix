@@ -28,84 +28,84 @@ let
   };
 in
 stdenv.mkDerivation {
-    pname = "cups-brother-${model}";
-    inherit version;
+  pname = "cups-brother-${model}";
+  inherit version;
 
-    srcs = [
-      cups
-      lpr
-    ];
+  srcs = [
+    cups
+    lpr
+  ];
 
-    nativeBuildInputs = [
-      #dpkg
-      makeWrapper
-    ];
+  nativeBuildInputs = [
+    #dpkg
+    makeWrapper
+  ];
 
-    buildInputs = [
-      cups
-      ghostscript
-      a2ps
-      gawk
-    ];
+  buildInputs = [
+    cups
+    ghostscript
+    a2ps
+    gawk
+  ];
 
-    unpackPhase = ''
-      runHook preUnpack
+  unpackPhase = ''
+    runHook preUnpack
 
-      dpkg-deb -x ${lpr} $out
-      dpkg-deb -x ${cups} $out
+    dpkg-deb -x ${lpr} $out
+    dpkg-deb -x ${cups} $out
 
-      runHook postUnpack
-    '';
+    runHook postUnpack
+  '';
 
-    installPhase = ''
-      substituteInPlace $out/opt/brother/Printers/${model}/lpd/filter${model} \
-      --replace /opt "$out/opt"
+  installPhase = ''
+    substituteInPlace $out/opt/brother/Printers/${model}/lpd/filter${model} \
+    --replace /opt "$out/opt"
 
-      substituteInPlace $out/opt/brother/Printers/${model}/inf/br${model}rc \
-      --replace "PaperType=Letter" "PaperType=A4"
+    substituteInPlace $out/opt/brother/Printers/${model}/inf/br${model}rc \
+    --replace "PaperType=Letter" "PaperType=A4"
 
-      patchelf --set-interpreter $(cat $NIX_CC/nix-support/dynamic-linker) \
-      $out/opt/brother/Printers/${model}/lpd/br${model}filter
+    patchelf --set-interpreter $(cat $NIX_CC/nix-support/dynamic-linker) \
+    $out/opt/brother/Printers/${model}/lpd/br${model}filter
 
-      mkdir -p $out/lib/cups/filter/
-      ln -s $out/opt/brother/Printers/${model}/lpd/filter${model} $out/lib/cups/filter/brlpdwrapper${model}
+    mkdir -p $out/lib/cups/filter/
+    ln -s $out/opt/brother/Printers/${model}/lpd/filter${model} $out/lib/cups/filter/brlpdwrapper${model}
 
-      wrapProgram $out/opt/brother/Printers/${model}/lpd/filter${model} \
-        --prefix PATH ":" ${
-          lib.makeBinPath [
-            gawk
-            ghostscript
-            a2ps
-            file
-            gnused
-            gnugrep
-            coreutils
-            which
-          ]
-        }
+    wrapProgram $out/opt/brother/Printers/${model}/lpd/filter${model} \
+      --prefix PATH ":" ${
+        lib.makeBinPath [
+          gawk
+          ghostscript
+          a2ps
+          file
+          gnused
+          gnugrep
+          coreutils
+          which
+        ]
+      }
 
-      for f in $out/opt/brother/Printers/${model}/cupswrapper/cupswrapper${model}; do
-        wrapProgram $f --prefix PATH : ${
-          lib.makeBinPath [
-            coreutils
-            ghostscript
-            gnugrep
-            gnused
-          ]
-        }
-      done
+    for f in $out/opt/brother/Printers/${model}/cupswrapper/cupswrapper${model}; do
+      wrapProgram $f --prefix PATH : ${
+        lib.makeBinPath [
+          coreutils
+          ghostscript
+          gnugrep
+          gnused
+        ]
+      }
+    done
 
-      mkdir -p $out/share/cups/model
-      ln -s $out/opt/brother/Printers/${model}/cupswrapper/brother_${model}_printer_en.ppd $out/share/cups/model/
-    '';
+    mkdir -p $out/share/cups/model
+    ln -s $out/opt/brother/Printers/${model}/cupswrapper/brother_${model}_printer_en.ppd $out/share/cups/model/
+  '';
 
-    meta = with lib; {
-      homepage = "https://www.brother.com/";
-      description = "Brother ${model} printer driver";
-      sourceProvenance = with sourceTypes; [ binaryNativeCode ];
-      license = licenses.unfree;
-      platforms = platforms.linux;
-      downloadPage = "https://support.brother.com/g/b/downloadlist.aspx?c=gb&lang=en&prod=${model}_all&os=128";
-      maintainers = with maintainers; [ marcovergueira ];
-    };
+  meta = with lib; {
+    homepage = "https://www.brother.com/";
+    description = "Brother ${model} printer driver";
+    sourceProvenance = with sourceTypes; [ binaryNativeCode ];
+    license = licenses.unfree;
+    platforms = platforms.linux;
+    downloadPage = "https://support.brother.com/g/b/downloadlist.aspx?c=gb&lang=en&prod=${model}_all&os=128";
+    maintainers = with maintainers; [ marcovergueira ];
+  };
 }
