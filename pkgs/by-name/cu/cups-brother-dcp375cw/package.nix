@@ -20,11 +20,11 @@ let
   model = "dcp375cw";
   cups = fetchurl {
     url = "https://download.brother.com/welcome/dlf005429/dcp375cwcupswrapper-${version}.i386.deb";
-    sha256 = "9a255728b595d2667b2caf9d0d332b677e1a6829a3ec1ed6d4e900a44069cf2d";
+    hash = "sha256-ZgE2o/xU11+MzSnBYakXZE5m+Qa85/KIo31wKWAmsGY=";
   };
   lpr = fetchurl {
     url = "https://download.brother.com/welcome/dlf005427/dcp375cwlpr-${version}.i386.deb";
-    sha256 = "6daf0144b5802ea8da394ca14db0e6f0200d4049545649283791f899b7f7bd26";
+    hash = "sha256-ZgE2o/xU11+MzSnBYakXZE5m+Qa85/KIo31wKWAmsGY=";
   };
 in
 stdenv.mkDerivation {
@@ -37,7 +37,7 @@ stdenv.mkDerivation {
     ];
 
     nativeBuildInputs = [
-      # dpkg
+      #dpkg
       makeWrapper
     ];
 
