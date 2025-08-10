@@ -30,7 +30,7 @@ stdenv.mkDerivation {
   pname = "cups-brother-${model}";
   inherit version;
 
-  src = [
+  srcs = [
     cupsdeb
     lprdeb
   ];
@@ -50,8 +50,8 @@ stdenv.mkDerivation {
   unpackPhase = ''
     runHook preUnpack
 
-    dpkg-deb -x ${lprdeb} $out
-    dpkg-deb -x ${cupsdeb} $out
+    dpkg-deb -x $lprdeb $out
+    dpkg-deb -x $cupsdeb $out
 
     runHook postUnpack
   '';
