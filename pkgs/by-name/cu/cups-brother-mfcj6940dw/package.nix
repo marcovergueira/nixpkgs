@@ -71,17 +71,33 @@ stdenv.mkDerivation {
 
   doCheck = true;
 
+  dontStrip = true;
+
   checkPhase = ''
-    echo "Running dependency checks for i686 Brother binaries"
-    echo "Interpreter: ${interpreter}"
+    echo "Running dependency checks for Brother binaries"
     set -eu
+
+    echo "i686 loader: ${interpreter}"
+    echo "x86_64 loader: ${stdenv.cc.libc}/lib/ld-linux-x86-64.so.2"
+
     for bin in \
       "$out/opt/brother/Printers/${model}/lpd/i686/br${model}filter" \
-      "$out/opt/brother/Printers/${model}/lpd/i686/brprintconf_${model}"
+      "$out/opt/brother/Printers/${model}/lpd/i686/brprintconf_${model}" \
+      "$out/opt/brother/Printers/${model}/lpd/x86_64/br${model}filter" \
+      "$out/opt/brother/Printers/${model}/lpd/x86_64/brprintconf_${model}"
     do
       echo "---- $bin ----"
       if [ -x "$bin" ]; then
-        "${interpreter}" --list "$bin" || true
+        case "$bin" in
+          *"/i686/"*)
+            # Use 32-bit loader to list needed libs
+            "${interpreter}" --list "$bin" || true
+            ;;
+          *"/x86_64/"*)
+            # Use 64-bit loader to list needed libs
+            "${stdenv.cc.libc}/lib/ld-linux-x86-64.so.2" --list "$bin" || true
+            ;;
+        esac
       else
         echo "WARN: missing or not executable: $bin"
       fi
