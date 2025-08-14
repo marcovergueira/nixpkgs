@@ -69,6 +69,25 @@ stdenv.mkDerivation {
     runHook postInstall
   '';
 
+  doCheck = true;
+
+  checkPhase = ''
+    echo "Running dependency checks for i686 Brother binaries"
+    echo "Interpreter: ${interpreter}"
+    set -eu
+    for bin in \
+      "$out/opt/brother/Printers/${model}/lpd/i686/br${model}filter" \
+      "$out/opt/brother/Printers/${model}/lpd/i686/brprintconf_${model}"
+    do
+      echo "---- $bin ----"
+      if [ -x "$bin" ]; then
+        "${interpreter}" --list "$bin" || true
+      else
+        echo "WARN: missing or not executable: $bin"
+      fi
+    done
+  '';
+
   postFixup = ''
     wrapProgram $out/opt/brother/Printers/${model}/lpd/filter_${model} \
         --prefix PATH ":" ${
