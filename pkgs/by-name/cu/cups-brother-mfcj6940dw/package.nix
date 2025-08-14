@@ -5,12 +5,16 @@
   fetchurl,
   dpkg,
   makeWrapper,
+  patchelf,
   ghostscript,
   file,
   gnused,
   gnugrep,
   coreutils,
   which,
+  gawk,
+  bash,
+  gzip,
   perl,
 }:
 let
@@ -29,6 +33,7 @@ stdenv.mkDerivation {
   nativeBuildInputs = [
     dpkg
     makeWrapper
+    patchelf
   ];
 
   unpackPhase = ''
@@ -74,6 +79,9 @@ stdenv.mkDerivation {
             gnugrep
             coreutils
             which
+            gawk
+            bash
+            gzip
           ]
         }
     wrapProgram $out/opt/brother/Printers/${model}/cupswrapper/brother_lpdwrapper_${model} \
@@ -81,14 +89,21 @@ stdenv.mkDerivation {
         lib.makeBinPath [
           gnugrep
           coreutils
+          gnused
+          which
+          gawk
+          bash
+          gzip
         ]
       }
     wrapProgram $out/opt/brother/Printers/${model}/lpd/i686/brprintconf_${model} \
       --set LD_PRELOAD "${pkgsi686Linux.libredirect}/lib/libredirect.so" \
-      --set NIX_REDIRECTS /opt=$out/opt
+      --set NIX_REDIRECTS /opt=$out/opt \
+      --prefix LD_LIBRARY_PATH ":" "${lib.makeLibraryPath [ pkgsi686Linux.stdenv.cc.cc.lib pkgsi686Linux.zlib ]}"
     wrapProgram $out/opt/brother/Printers/${model}/lpd/i686/br${model}filter \
       --set LD_PRELOAD "${pkgsi686Linux.libredirect}/lib/libredirect.so" \
-      --set NIX_REDIRECTS /opt=$out/opt
+      --set NIX_REDIRECTS /opt=$out/opt \
+      --prefix LD_LIBRARY_PATH ":" "${lib.makeLibraryPath [ pkgsi686Linux.stdenv.cc.cc.lib pkgsi686Linux.zlib ]}"
   '';
 
   meta = {
