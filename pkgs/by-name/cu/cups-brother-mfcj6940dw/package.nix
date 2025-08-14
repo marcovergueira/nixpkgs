@@ -51,7 +51,7 @@ stdenv.mkDerivation {
       --replace-fail /usr/bin/perl ${lib.getExe perl} \
       --replace-fail "basedir =~ " "basedir = \"$out/opt/brother/Printers/${model}/\"; #" \
       --replace-fail "PRINTER =~ " "PRINTER = \"${model}\"; #" \
-      --replace-fail "LPDCONFIGEXE=" "LPDCONFIGEXE=\"$out/usr/bin/brprintconf_\"; #"
+      --replace-fail "LPDCONFIGEXE=" "LPDCONFIGEXE=\"$out/opt/brother/Printers/${model}/lpd/i686/brprintconf_${model}\"; #"
 
     patchelf --set-interpreter ${interpreter} $out/opt/brother/Printers/${model}/lpd/i686/br${model}filter
     patchelf --set-interpreter ${interpreter} $out/opt/brother/Printers/${model}/lpd/i686/brprintconf_${model}
