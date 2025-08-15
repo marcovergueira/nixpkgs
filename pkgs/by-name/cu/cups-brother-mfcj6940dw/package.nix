@@ -50,7 +50,8 @@ stdenv.mkDerivation {
     substituteInPlace $out/opt/brother/Printers/${model}/lpd/filter_${model} \
       --replace-fail /usr/bin/perl ${lib.getExe perl} \
       --replace-fail "PRINTER =~" "PRINTER = \"${model}\"; #" \
-      --replace-fail "BR_PRT_PATH =~" "BR_PRT_PATH = \"$out/opt/brother/Printers/${model}/\"; #"
+      --replace-fail "BR_PRT_PATH =~" "BR_PRT_PATH = \"$out/opt/brother/Printers/${model}/\"; #" \
+      --replace-fail "my $BRCONV=~" "my $BRCONV=sprintf (\"${BR_PRT_PATH}lpd/i686/br%sfilter\",$PRINTER); #"
 
     substituteInPlace $out/opt/brother/Printers/${model}/cupswrapper/brother_lpdwrapper_${model} \
       --replace-fail /usr/bin/perl ${lib.getExe perl} \
